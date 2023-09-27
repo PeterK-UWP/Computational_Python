@@ -49,8 +49,8 @@ def second_order_midpt(a, b, N, rhs, bc, methods='jacobi'):
             pass
         if i > 0:
             A[i][i - 1] = 1
-        #b[i] = delta * delta * rhs(i * delta)
-        b[i] = delta * delta * rhs(i * delta, 1, 1)  # bessel x, y, yp
+        b[i] = delta * delta * rhs(i * delta)
+        #b[i] = delta * delta * rhs(i * delta, 1, 1)  # bessel x, y, yp
         x[i] = a + delta * i
 
     if methods == 'jacobi':
@@ -111,35 +111,33 @@ if __name__ == "__main__":
     # second order
     # y'' = ...
     rhs = lambda x: x
-    bessel = lambda x, y, yp: -1/x * yp - y  # a = 0
+     #bessel = lambda x, y, yp: -1/x * yp - y  # a = 0
     # x0 domain
     a = 0.0
-    bes0 = 0
+     #bes0 = 0
     # xf domain
     b = 2
-    besf = 20
+     #besf = 20
     # iterations
     N = 100
-    besN = 1000
+     #besN = 1000
     # boundary
     bc = {N-1: -1.0, 0: 1.0}
-    besbc = {N-1: 0, 0: 0}
+     #besbc = {N-1: 0, 0: 0}
 
-    x_val, y_val, t = second_order_midpt(bes0, besf, besN, bessel, besbc, methods='jacobi')
+     #x_val, y_val, t = second_order_midpt(bes0, besf, besN, bessel, besbc, methods='jacobi')
 
-
-
-    #x_val, y_val, t = second_order_midpt(a, b, N, rhs, bc, methods='jacobi')
+    x_val, y_val, t = second_order_midpt(a, b, N, rhs, bc, methods='jacobi')
     plt.scatter(x_val[::10], y_val[::10], color='red')
     # known solution
-    #f = [x**3/6 - 5*x/3 + 1 for x in x_val]
-    m_l = [0, 1, 2, 3]
-    J = []
-    for m in m_l:
-        Jb = [((-1)**m *(x/2)**(2*m))/(np.factorial(m)*gamma(m+1)) for x in x_val]
-        J.append(Jb)
-    plt.plot(x_val, J)
-    #plt.plot(x_val, f)
+    f = [x**3/6 - 5*x/3 + 1 for x in x_val]
+    #m_l = [0, 1, 2, 3]
+    #J = []
+    #for m in m_l:
+    #    Jb = [((-1)**m *(x/2)**(2*m))/(np.factorial(m)*gamma(m+1)) for x in x_val]
+    #    J.append(Jb)
+    #plt.plot(x_val, J)
+    plt.plot(x_val, f)
     plt.xlabel('x')
     plt.ylabel('f(x)')
     plt.grid()

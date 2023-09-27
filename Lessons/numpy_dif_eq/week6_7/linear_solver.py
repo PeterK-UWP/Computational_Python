@@ -20,7 +20,7 @@ def gaussian_upper_triangle(a, b):
         else:
             diag = C[i][i]
             for k in range(i + 1, len(C)):
-                C[k] = C[k] * diag - C[i] * C[k][i]
+                C[k] = C[k] - C[i] * C[k][i]/diag# * diag - C[i] * C[k][i]
     return C
 
 
@@ -28,7 +28,7 @@ def back_substitution(A, fixed=None):
     N = len(A)
     x = np.zeros(N)
 
-    x[N - 1] = A[N - 1][N] / A[N - 1][N - 1]
+    x[N - 1] = A[N - 1][N] / A[N - 1][N - 1] # invailid value encounder in scalar divide
 
     if fixed != None:
         for index in fixed:
@@ -40,7 +40,7 @@ def back_substitution(A, fixed=None):
         for j in range(i + 1, N):
             s += A[i][j] * x[j]
         s = A[i][N] - s
-        s /= A[i][i]
+        s /= A[i][i] #
         x[i] = s
 
         if fixed != None:
@@ -56,6 +56,7 @@ def gaussian_elimination(A, b, fixed=None):
 
 
 def jacobi(A, b, epsilon=1e-8, maxiter=5000, omega=1, fixed=None, debug=False):
+    # matrix, vector
     # avoid if inside for loops
     diag = np.diag(np.diag(A))  # diag twice?
     LU = A - diag
