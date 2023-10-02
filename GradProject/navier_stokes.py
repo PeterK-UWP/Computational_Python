@@ -1,7 +1,8 @@
 # https://www.youtube.com/watch?v=BQLvNLgMTQE   # lid driven cavity
 # example of navier stokes from youtube not my work!!
+
 """
-pu/pt + (u * grad) = -1/rho * grad_p + nu lap_u + f
+pu/pt + (u * grad)u = -1/rho * grad_p + nu lap_u + f
 incompressibility div u = 0
 
 u:
