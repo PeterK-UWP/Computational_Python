@@ -98,8 +98,31 @@ def Hermite(l): # WIP
                                             no_pts, coef1, coef2, coef3, non_homo_func, bounds)
     return x, y
 
+
+def AssociatedLegendre(n, m):
+    #import scipy
+    #scipy.special.lpmv(m, n)
+    epsillon = 1e-9
+    pts = 100
+    bc = {pts - 1: 1.0}
+    if n % 2 == 0:
+        bc.update({0: 1.0})
+    else:
+        bc.update({0: -1.0})
+
+    starting_bound = -1.0 #+ epsillon
+    ending_bound = 1.0 #- epsillon
+
+    px = lambda x: 1 - x ** 2
+    qx = lambda x: -2 * x * (m+1)
+    rx = lambda x: (n*(n + 1)) - (m*(m + 1))
+    sx = lambda x: 0
+    x_values, y_values, t = general_linear_second_ordered(starting_bound, ending_bound, pts, px, qx, rx, sx, bc)
+    return x_values, y_values
+
 # results P1, P2, P3, ... n = 1, 2, 3
 if __name__ == '__main__':
+    """
     # Euler_Cauchy Polynomials
     e_list = []
     values = [[-1, -.1], [-2, .25], [-1, .1]]
@@ -109,17 +132,18 @@ if __name__ == '__main__':
         ec_list.append(ec)
     for i in ec_list:
         plt.plot(x, i)
-    plt.show()
+    plt.show()"""
 
     # Legendre Polynomials
     p_list = []
     for i in np.linspace(1, 4, 4):
-        x, p = Legendre(i)
+        #x, p = Legendre(i)
+        x, p = AssociatedLegendre(2, 1)
         p_list.append(p)
     for p in p_list:
         plt.plot(x, p)
     plt.show()
-
+"""
     # Bessel Polynomials
     j_list = []
     for i in np.linspace(0, 3, 3):
@@ -140,3 +164,4 @@ if __name__ == '__main__':
 
     # Hermite Polynomials
 
+"""
