@@ -5,7 +5,7 @@
 # assume to be gravitational (coulumbs is similar)
 
 import numpy as np
-from evolution import evolve as ev
+import evolution as ev
 import matplotlib.pyplot as plt
 
 G_SI = 6.674E-11 # universal gravitational constant
@@ -30,7 +30,7 @@ e_halley = 0.96658
 def orbit(mass1, mass2, perihelion, eccentricity, no_pts, dt):
     def zeta(xi, t=None, param=None):
         radius = (xi[0] * xi[0] + xi[1] * xi[1])**1.5
-        return np.array(xi[2], xi[3], -4*np.pi**2*xi[0]/radius, -4*np.pi**2*xi[1]/radius)
+        return np.array([xi[2], xi[3], -4*np.pi**2*xi[0]/radius, -4*np.pi**2*xi[1]/radius])
 
     a = perihelion/(1-eccentricity)
     chi = a
@@ -43,7 +43,7 @@ def orbit(mass1, mass2, perihelion, eccentricity, no_pts, dt):
     scale = np.array([tau, chi, chi, chi/tau, chi/tau]) # 2D
     initial_data_array = np.array([perihelion, 0, 0, velocity])
     time = np.arange(0, no_pts * dt, dt)
-    trajectory = ev(initial_data_array, t0, dt, no_pts, zeta, rk4, scale) # implament rk4 in evolution.py
+    trajectory = ev.evolve(initial_data_array, t0, dt, no_pts, zeta, ev.rk4_step, scale) # implament rk4 in evolution.py
 
     for function in trajectory:
         path = [mass2/total_mass*function[0]/AU, mass2/total_mass*function[1]/AU,
@@ -80,3 +80,4 @@ if __name__ == "__main__":
     plt.xlabel('x (AU)')
     plt.ylabel('y (AU)')
     plt.show()
+

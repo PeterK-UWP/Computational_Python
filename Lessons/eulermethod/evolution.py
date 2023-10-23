@@ -1,6 +1,6 @@
 import numpy as np
 """
-we are solving dxi/dt = zeta(xi, t) where xi is an n-dimensional vecotr and zeta is called an n-dimensional vector 
+we are solving dxi/dt = zeta(xi, t) where xi is an n-dimensional vector and zeta is called an n-dimensional vector 
 field or simply RHS, with the initial condition xi0 - xi(t0)"""
 def evolve(y0: np.ndarray, t0: float, dt: float, n: int,
            f: callable, method: callable, scale=None, param=None) -> np.ndarray:  # type to expect
@@ -50,8 +50,51 @@ def euler_step_param(y:np.ndarray, t:float, dt:float, f:callable, param)->np.nda
     return y
 
 
+def verlet_step(y: np.ndarray, t:float, dt:float, f:callable)->np.ndarray:
+    dof = len(y) // 2
+    for i in range(dof):
+        y[2* i + 1] = y[2* i + 1] + dt * f(y, t)[2*i + 1]
+        y[2*i] = y[2*i] + dt*f(y, t)[2*i]
+    return y
 
-if __name__ == '__main__':
-    print(
-    'chicken'
-    )
+
+def verlet_step_param(y:np.ndarray, t:float, dt:float, f:callable, param)->np.ndarray:
+    dof = len(y) // 2
+    for i in range(dof):
+        y[2 * i + 1] = y[2 * i + 1] + dt * f(y, t, param)[2 * i + 1]
+        y[2 * i] = y[2 * i] + dt * f(y, t, param)[2 * i]
+    return y
+
+def leap_frog_step(y:np.ndarray, t:float, dt:float, f:callable)->np.ndarray:
+    dof = len(y) // 2
+    for i in range(dof):
+        y[2 * i] = y[2 * i] + dt * f(y, t)[2 * i]
+        y[2 * i + 1] = y[2 * i + 1] + dt * f(y, t)[2 * i + 1]
+    return y
+
+def leap_frog_step_param(y:np.ndarray, t:float, dt:float, f:callable, param)->np.ndarray:
+    dof = len(y) // 2
+    for i in range(dof):
+        y[2 * i] = y[2 * i] + dt * f(y, t, param)[2 * i]
+        y[2 * i + 1] = y[2 * i + 1] + dt * f(y, t, param)[2 * i + 1]
+    return y
+
+
+def rk4_step(y:np.ndarray, t:float, dt:float, f:callable)->np.ndarray:
+    k1 = f(y, t)
+    k2 = f(y + k1*dt / 2.0, t + dt / 2.0)
+    k3 = f(y + k2*dt / 2.0, t + dt / 2.0)
+    k4 = f(y + k3*dt, t+dt)
+    k = dt * (k1 + 2*k2 + 2*k3 + k4) / 6.0
+    y = y + k
+    return y
+
+
+def rk4_step_param(y:np.ndarray, t:float, dt:float, f:callable, param)->np.ndarray:
+    k1 = f(y, t, param)
+    k2 = f(y + k1*dt / 2.0, t + dt / 2.0, param)
+    k3 = f(y + k2*dt / 2.0, t + dt / 2.0, param)
+    k4 = f(y + k3*dt, t+dt, param)
+    k = dt * (k1 + 2*k2 + 2*k3 + k4) / 6.0
+    y = y + k
+    return y

@@ -1,5 +1,5 @@
 import numpy as np
-from evolution import evolve, euler_step, euler_step_param
+from Lessons.eulermethod.evolution import evolve, euler_step
 import matplotlib.pyplot as plt
 
 def projectile_2D(x0, y0, v0, theta, g, n, dt):

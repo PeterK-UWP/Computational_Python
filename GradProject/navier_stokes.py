@@ -5,7 +5,7 @@
 pu/pt + (u * grad)u = -1/rho * grad_p + nu lap_u + f
 incompressibility div u = 0
 
-u:
+u: velocity
 p: pressure
 f: forcing(this case = 0)
 nu: kinemetic viscosity
@@ -35,7 +35,7 @@ in 2D: in index notation u = [ux, uy]
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
-
+import time
 N_POINTS = 41
 DOMAIN_SIZE = 1.0
 N_ITERATION = 500
@@ -48,7 +48,7 @@ N_PRESSURE_POISSON_ITERATIONS = 50
 
 STABILITY_SAFETY_FACTOR = 0.5
 def main():
-    element_length = DOMAIN_SIZE / (N_POINTS - 1)  # uniform discretizations, -1 because no. includes bc pts
+    element_length = DOMAIN_SIZE / (N_POINTS - 1)  # uniform discriminations, -1 because no. includes bc pts
     x = np.linspace(0.0, DOMAIN_SIZE, N_POINTS)
     y = np.linspace(0.0, DOMAIN_SIZE, N_POINTS)
 
@@ -94,7 +94,7 @@ def main():
     if TIME_STEP_LENGTH > STABILITY_SAFETY_FACTOR * maxiumum_possible_timestep_length:
         raise RuntimeError("stability not guaranteed")
 
-    for _ in tqdm(range(N_ITERATION)):
+    for _ in tqdm(range(N_ITERATION)):  # tqdm simply is a progression bar
         d_u_prev__dx = central_difference_x(u_prev)
         d_u_prev__dy = central_difference_y(u_prev)
         d_v_prev__dx = central_difference_x(v_prev)
@@ -169,14 +169,18 @@ def main():
     plt.contourf(X, Y, p_next)
     plt.colorbar()
 
-    #plt.quiver(X, Y, u_next, v_next, color='black')
-    plt.streamplot(X, Y, u_next, v_next, color='black')
+    plt.quiver(X, Y, u_next, v_next, color='black')
+    #plt.streamplot(X, Y, u_next, v_next, color='black')
     plt.show()
 
     return
 
 if __name__ == '__main__':
+    start_time = time.time()
     main()
+    end_time = time.time()
+    compute_time = (end_time - start_time) * 1000
+    print(compute_time)
 
 
 
