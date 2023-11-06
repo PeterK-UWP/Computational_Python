@@ -78,7 +78,11 @@ def main():
         diff = np.zeros_like(field)  # differentiated object = zero like tensor
 
         # fill in interior points, not on boundary and fill with central diff
-        diff[1:-1, 1:-1] = (field[2: , 1:-1] - field[0:-2, 1:-1]) / (2 * element_length)  # field[y:y, x:x] => diff in x
+        diff[1:-1, 1:-1] = (
+            field[2: , 1:-1] - field[0:-2, 1:-1]
+        ) / (
+                2 * element_length
+        )  # field[y:y, x:x] => diff in x
         # advanced by 1 - subtract by 1
 
         return diff
@@ -89,9 +93,9 @@ def main():
                             field[1:-1, 2: ] + field[2: , 1:-1]) / element_length**2
         return diff
 
-    maxiumum_possible_timestep_length = (0.5 * element_length**2/KINEMATC_VISCOSITY)
+    maximum_possible_timestep_length = (0.5 * element_length**2/KINEMATC_VISCOSITY)
     # heat eq
-    if TIME_STEP_LENGTH > STABILITY_SAFETY_FACTOR * maxiumum_possible_timestep_length:
+    if TIME_STEP_LENGTH > STABILITY_SAFETY_FACTOR * maximum_possible_timestep_length:
         raise RuntimeError("stability not guaranteed")
 
     for _ in tqdm(range(N_ITERATION)):  # tqdm simply is a progression bar
@@ -107,7 +111,7 @@ def main():
         u_tent = (u_prev + TIME_STEP_LENGTH * (-(u_prev * d_u_prev__dx + v_prev * d_u_prev__dy)
                                         + KINEMATC_VISCOSITY * laplace__u_prev))
 
-        v_tent = (v_prev + TIME_STEP_LENGTH * (-(v_prev * d_v_prev__dx + v_prev * d_v_prev__dy)
+        v_tent = (v_prev + TIME_STEP_LENGTH * (-(u_prev * d_v_prev__dx + v_prev * d_v_prev__dy)
                                         + KINEMATC_VISCOSITY * laplace__v_prev))
 
         # velocity bc: homo dirichlet bc everywhere except the horizontal at the top with is prescribed
@@ -169,8 +173,8 @@ def main():
     plt.contourf(X, Y, p_next)
     plt.colorbar()
 
-    plt.quiver(X, Y, u_next, v_next, color='black')
-    #plt.streamplot(X, Y, u_next, v_next, color='black')
+    #plt.quiver(X, Y, u_next, v_next, color='black')
+    plt.streamplot(X, Y, u_next, v_next, color='black')
     plt.show()
 
     return

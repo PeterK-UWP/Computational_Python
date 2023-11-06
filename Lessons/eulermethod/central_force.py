@@ -36,8 +36,12 @@ def orbit(mass1, mass2, perihelion, eccentricity, no_pts, dt):
     chi = a
 
     total_mass = mass1 + mass2
-    tau = np.sqrt(4*np.pi**2*a**3)/(G_SI*total_mass)
-    velocity = np.sqrt((1+eccentricity)*G_SI*mass1/perihelion)
+    tau = np.sqrt(
+        (4*np.pi**2*a**3)/(G_SI*total_mass)
+    )
+    velocity = np.sqrt(
+        (1+eccentricity)*G_SI*mass1/perihelion
+    )
     t0 = 0.0
 
     scale = np.array([tau, chi, chi, chi/tau, chi/tau]) # 2D
@@ -45,6 +49,7 @@ def orbit(mass1, mass2, perihelion, eccentricity, no_pts, dt):
     time = np.arange(0, no_pts * dt, dt)
     trajectory = ev.evolve(initial_data_array, t0, dt, no_pts, zeta, ev.rk4_step, scale) # implament rk4 in evolution.py
 
+    complete_traj = []
     for function in trajectory:
         path = [mass2/total_mass*function[0]/AU, mass2/total_mass*function[1]/AU,
                 -mass1/total_mass*function[0]/AU, -mass1/total_mass*function[1]/AU,
