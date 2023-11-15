@@ -30,13 +30,13 @@ in 2D: in index notation u = [ux, uy], v = [vx, vy]
 # Input Commands
 N_POINTS = 41
 DOMAIN_SIZE = 1.0 #
-DOMAIN_SIZE_X = 3.0
-DOMAIN_SIZE_Y = 0.2
+DOMAIN_SIZE_X = 20.0
+DOMAIN_SIZE_Y = 20.0  # eddies in the corners forming the fluid in the corners is trapped by the cavity bounds forming eddies
 N_ITERATION = 500
 TIME_STEP_LENGTH = 0.001
 KINEMATC_VISCOSITY = 0.1        # nu
-DENSITY = 1.0                   # rho
-HORIZONTAL_VELOCITY_TOP = 10.0
+DENSITY = 1.0                   # rho and prop to pressure high rho high pressure, more mass more impact and more press
+HORIZONTAL_VELOCITY_TOP = 1.0  # velocity prop to the pressure and the sink centering
 
 N_PRESSURE_POISSON_ITERATIONS = 50
 STABILITY_SAFETY_FACTOR = 0.5
@@ -185,6 +185,14 @@ def Navier_Stokes():
     plt.colorbar()
 
     plt.quiver(x_mesh, y_mesh, u_next, v_next, color='black')
+    #plt.title(r'$\vec{u}(x, y)$ & $\vec{\nabla}p$ for a Lid-Driven Cavity')
+    #plt.xlabel('x - position (m)')
+    #plt.ylabel('y - position (m)')
+    plt.streamplot(x_mesh, y_mesh, u_next, v_next, color='black')
+    plt.title(r'$\vec{u}(x, y)$ & $\vec{\nabla}p$ for a Lid-Driven Cavity')
+    plt.xlabel('x - position (m)')
+    plt.ylabel('y - position (m)')
+    plt.savefig('20x20_r1_u1')
     plt.show()
 
     return
