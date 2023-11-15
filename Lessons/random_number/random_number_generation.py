@@ -68,18 +68,74 @@ class lcg_random:
                 for k in range(self.m - 1, 0, -1):
                     if int(self.a ** k - 1) % self.m == 0:
                         correct = True
-                    if correct:
-                        self.max = self.m - 1
-                    else:
-                        raise Exception('Wrong combination of a, c, m')
+                if correct:
+                    self.max = self.m - 1
                 else:
                     raise Exception('Wrong combination of a, c, m')
             else:
-                if coprime(self.c, self.m) and (self.a - 1) % 4 == 0:
-                    self.max = self.m
-                else:
-                    raise Exception('Wrong combination of a, c, m')
+                raise Exception('Wrong combination of a, c, m')
+        else:
+            if coprime(self.c, self.m) and (self.a - 1) % 4 == 0:
+                self.max = self.m
+            else:
+                raise Exception('Wrong combination of a, c, m')
 
     def next(self):
         self.rand = (self.a * self.rand + self.c) % self.m
-        
+        return self.rand
+
+
+    def max_rand(self):
+        return self.max
+
+
+    def random(self, range=1.0):
+        return self.next() / self.max_rand() * range
+
+
+def pi_test(rand, N):
+    count1 = 0
+    count2 = 0
+    val = []
+    for i in range(N):
+        x = rand.random(2) - 1
+        y = rand.random(2) - 1
+        if x * x + y * y < 1:
+            count1 += 1
+        count2 += 1
+        val.append(count1/count2 * 4)
+    return val
+
+if __name__ == '__main__':
+    small_random = lcg_random(3, 0, 7, time.time_ns())
+    print(small_random.max_rand())
+    for i in range(10):
+        print(small_random.random(), end=' ')
+    print(' ')
+
+    med_random = lcg_random(17, 21, 128, time.time_ns())
+    print(med_random.max_rand())
+    for i in range(10):
+        print(med_random.random(), end=' ')
+    print(' ')
+
+    high_random = lcg_random(1140671485, 128201163, 2**24, time.time_ns())
+    print(high_random.max_rand())
+    for i in range(10):
+        print(high_random.random(), end=' ')
+    print(' ')
+
+    pi_small_test = pi_test(small_random, 1000)
+    pi_med_test = pi_test(med_random, 1000)
+    pi_high_test = pi_test(high_random, 1000)
+
+    plt.plot(pi_small_test, color='blue')
+    plt.plot(pi_med_test, color='green')
+    plt.plot(pi_high_test, color='orange')
+    plt.axhline(y = np.pi, color='red', linestyle='dotted')
+    plt.xlabel('step')
+    plt.ylabel(r'Value of $\pi$')
+    plt.show()
+    print(pi_small_test[-1], pi_med_test[-1], pi_high_test[-1], np.pi)
+
+
