@@ -55,7 +55,7 @@ def Poisson_2D(cmin, cmax, Nx, Ny, method='jacobi'):
         bc = dict(sorted(bc.items()))
         return bc
 
-    def right_hand_side(cmin, cmax, Nx, Ny, val):
+    def right_hand_side(cmin, cmax, Nx, Ny, val):  # rho/epsillon
         N = Nx * Ny
         b = np.zeros(N)
         # single charge at 0, 0
@@ -141,10 +141,10 @@ def Poisson_2D(cmin, cmax, Nx, Ny, method='jacobi'):
 
     return X, Y, Potential, compute_time
 
-cmin = np.array([-1, -1])
-cmax = np.array([1, 1])
+cmin = np.array([-1, -1]) # in nm
+cmax = np.array([1, 1]) # in nm
 x, y, p, t = Poisson_2D(cmin, cmax, 50, 50)
-print(p)
+#print(p)
 
 fig = plt.figure(figsize=(16, 9))
 ax = plt.axes(projection='3d')
