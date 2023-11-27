@@ -5,6 +5,9 @@ import numpy.linalg as lin
 import time
 import matplotlib.pyplot as plt
 from matplotlib import cm
+
+# perturbation theory, alpha does not depend on x, it just has
+# to intersect HO, with more boxes we get better approximation
 def Quantum_1D(xmin, xmax, no_pts, potential, param=None):
     domain = (xmax - xmin) / no_pts
     d_squared = domain*domain
@@ -57,10 +60,11 @@ if __name__ == '__main__':
     x0 = 5
     harmonic = lambda x: x ** 2
     shift = lambda x: (x - x0) ** 2
+    absolute = lambda x: a/2 * np.abs(x)
     a = 10
     no_pts = 100
     # eigen
-    value, vector = Quantum_1D(-a, a, no_pts, harmonic)
+    value, vector = Quantum_1D(-a, a, no_pts, absolute)
 
     NN = [i for i in range(20)]
     theory = [(2 * i + 1) for i in NN]

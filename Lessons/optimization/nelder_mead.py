@@ -17,7 +17,7 @@ class Nelder_Mead:
         self.delta = 0.5
         print(self.simplex)
 
-    def get(self, index, entry=None):
+    def get(self, index, entry=None): # entry is an n dimensional array
         if entry is None:
             return self.val[index], self.simplex[index]
         else:
@@ -149,19 +149,22 @@ class Nelder_Mead:
             print(val, index, rms, step_name)
         return nm.simplex[index]
 
-def volume(x, p):
+def volume(x, p): # not what needs to be changed...
+    #n+1 points max min simplex
+    # spread around an optimum point
+    # random
     return (p[0] * x[0] - p[1]) ** 2 + (p[2] * x[1] - p[3]) ** 2
 
 
 if __name__ == '__main__':
-    param = [4.0, 8.0, 3.0, 1.0]
-    #param = [3, 4, 6, 8, 10]
+    #param = [4.0, 8.0, 3.0, 1.0]
+    param = [3, 4, 6, 8, 10]
     nm = Nelder_Mead(2, volume, param)
     v, s = nm.get(0, [1, 1])
     v, s = nm.get(1, [6, 0])
     v, s = nm.get(2, [0, 3])
     x = nm.optimize()
-    print(x)
+    #print(x)
 
     X = np.arange(-5, 5, 0.25)
     Y = np.arange(-5, 5, 0.25)

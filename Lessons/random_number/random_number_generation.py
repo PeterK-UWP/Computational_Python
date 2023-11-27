@@ -137,5 +137,21 @@ if __name__ == '__main__':
     plt.ylabel(r'Value of $\pi$')
     plt.show()
     print(pi_small_test[-1], pi_med_test[-1], pi_high_test[-1], np.pi)
+    # how to check how good your random numbers are? Guy Squared test
+    # linear congruence. folding method
+    # statistically independent
+    # one output doesn't depend on the previous output.
+    # generate a time series, and make an auto correlation function
+    # c_n = 1/N sum from i to N of x sub i times x sum i plus n
+    # - 1/N^2 sum from i to N of x sub i times sum from k to N of x sub k (all divided by varience) ie (deltax sub i)^2
+    # exponential decay when implemented, should be more like a delta function at 0
 
+
+    # make a sample of x values x1, x2, x3, ..., xn and put them into the correlation function
+    # A e^-alpha*n, n>1/alpha, alpha depends on a b c (a, c, m above)
+    # check distribution, periodicity (get from Fouier Transform somehow),
+    # FT: x tilda (k/N) = sum from n of x sub n e^(-i2pi*k/N * n), k = 0, 1, ..., N-1 discrete form
+    # plot |xtilda|^2 vs k. compare with numpy random
+    # computing chi^2 = sum i to m bins of (N_i - P_i)^2/Sum from i to m of P_i
+    # ie. binning from computational.
 
