@@ -60,7 +60,7 @@ if __name__ == '__main__':
     a = 10
     no_pts = 100
     # eigen
-    value, vector = Quantum_1D(-a, a, no_pts, shift)
+    value, vector = Quantum_1D(-a, a, no_pts, harmonic)
 
     NN = [i for i in range(20)]
     theory = [(2 * i + 1) for i in NN]
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     x = np.linspace(-a, a, no_pts)
     theory0 = [(np.pi) ** -0.25 * np.exp(-xx * xx / 2) for xx in x]
     theory1 = [(np.pi) ** -0.25 * np.exp(-xx * xx / 2) * (-xx) for xx in x]
-    theory2 = [(8 * np.pi) ** -0.25 * np.exp(-xx * xx / 2) * (-2 * xx ** xx + 1) for xx in x]
+    theory2 = [(8 * np.pi) ** -0.25 * np.exp(-xx * xx / 2) * (-2 * xx * xx + 1) for xx in x]
     theory3 = [(8 * 6 * np.pi) ** -0.25 * np.exp(-xx * xx / 2) * (4 * xx * xx * xx - 6 * xx) for xx in x]
 
     fig = plt.figure(figsize=(8, 9), dpi=300)

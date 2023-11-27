@@ -54,8 +54,8 @@ def dV(x, param):
 
 
 if __name__ == '__main__':
-    param = [4.0, 8.0, 3.0, 1.0]
-    #param = [20.0, 0.0, 2.0, 6.5]
+    #param = [4.0, 8.0, 3.0, 1.0]
+    param = [1, 1.5, 1.5, 0]
     x = np.array([1, 1])
     x = gradient_descent(x, V, dV, param)
     print(x)

@@ -13,7 +13,7 @@ class Nelder_Mead:
         self.val = np.zeros(dim + 1)
         self.alpha = 1.0
         self.beta = 0.5
-        self.gamma = 0.5
+        self.gamma = 2.0
         self.delta = 0.5
         print(self.simplex)
 
