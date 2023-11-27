@@ -157,8 +157,8 @@ def volume(x, p): # not what needs to be changed...
 
 
 if __name__ == '__main__':
-    #param = [4.0, 8.0, 3.0, 1.0]
-    param = [3, 4, 6, 8, 10]
+    param = [4.0, 8.0, 3.0, 1.0]
+    #param = [3, 4, 6, 8, 10]
     nm = Nelder_Mead(2, volume, param)
     v, s = nm.get(0, [1, 1])
     v, s = nm.get(1, [6, 0])
