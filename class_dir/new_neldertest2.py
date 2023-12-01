@@ -6,7 +6,7 @@ from matplotlib import cm
 class Nelder_Mead:
     def __init__(self, dim, volume, param=None):
         self.dim = dim
-        self.simplex = np.zeros(dim*(dim + 1))
+        self.simplex = np.zeros(dim * (dim + 1))
         self.simplex = np.reshape(self.simplex, (dim + 1, dim))
         self.param = param
         self.cost_func = volume
@@ -17,22 +17,16 @@ class Nelder_Mead:
         self.delta = 0.5
         print(self.simplex)
 
-    def get(self, index, entry=None): # entry is an n dimensional array
+    def get(self, index, entry=None):  # entry is an n dimensional array
         if entry is None:
             return self.val[index], self.simplex[index]
         else:
             self.simplex[index] = np.array(entry)
-            if self.param == None:
+            if self.param is None:
                 self.val[index] = self.cost_func(entry)
             else:
                 self.val[index] = self.cost_func(entry, self.param)
             return self.val[index], self.simplex[index]
-
-    def __getitem__(self, index):
-        return self.get(index)
-
-    def __setitem__(self, index, entry):
-        return self.get(index, entry)
 
     def max_min(self):
         indices = np.argsort(self.val)
@@ -43,17 +37,15 @@ class Nelder_Mead:
         return indices[index]
 
     def centroid(self):
-        max, min = self.max_min()
+        max_val, min_val = self.max_min()
         p_bar = np.zeros(self.dim)
-        for i in range(max):
+        for i in range(max_val):
             p_bar += self.simplex[i]
-        for i in range(max + 1, self.dim + 1):
+        for i in range(max_val + 1, self.dim + 1):
             p_bar += self.simplex[i]
 
-        p_bar = p_bar/self.dim
-        # print(f'p_bar {p_bar}') # two terms based on dim.
-        # self.dim = 3 so our p_bar should be three terms
-        return p_bar #, max
+        p_bar = p_bar / self.dim
+        return p_bar
 
     def reflect(self, p_bar, p):
         return (1 + self.alpha) * p_bar - self.alpha * p
@@ -67,7 +59,7 @@ class Nelder_Mead:
     def point_shrink(self, pl, p):
         return self.delta * p + (1 - self.delta) * pl
 
-    def rmsd(self): # root mean square
+    def rmsd(self):
         average = 0.0
         square_average = 0.0
         for entry in self.val:
@@ -75,7 +67,7 @@ class Nelder_Mead:
             square_average += entry * entry
         average /= self.dim
         square_average /= self.dim
-        return np.sqrt(np.abs(square_average - average*average))
+        return np.sqrt(np.abs(square_average - average * average))
 
     def nelder_mead_step(self):
         max_original, min_original = self.max_min()
@@ -83,7 +75,7 @@ class Nelder_Mead:
         p_bar = self.centroid()
         p_r = self.reflect(p_bar, self.simplex[max_original])
 
-        if self.param == None:
+        if self.param is None:
             val_r = self.cost_func(p_r)
         else:
             val_r = self.cost_func(p_r, self.param)
@@ -94,7 +86,7 @@ class Nelder_Mead:
 
         if val_r < self.val[min_original]:
             p_ex = self.expand(p_bar, p_r)
-            if self.param == None:
+            if self.param is None:
                 val_ex = self.cost_func(p_ex)
             else:
                 val_ex = self.cost_func(p_ex, self.param)
@@ -102,14 +94,14 @@ class Nelder_Mead:
             if val_ex < val_r:
                 self.get(max_original, p_ex)
                 return val_ex, max_original, self.rmsd(), 'expand'
-
             else:
                 self.get(max_original, p_r)
                 return val_r, max_original, self.rmsd(), 'reflect'
+
         if val_r >= self.val[max_second]:
             if val_r < self.val[max_original]:
                 p_c = self.contract(p_bar, p_r)
-                if self.param == None:
+                if self.param is None:
                     val_c = self.cost_func(p_c)
                 else:
                     val_c = self.cost_func(p_c, self.param)
@@ -127,7 +119,7 @@ class Nelder_Mead:
                     return self.val[min_original], min_original, self.rmsd(), 'shrink'
             if val_r >= self.val[max_original]:
                 p_c = self.contract(p_bar, self.simplex[max_original])
-                if self.param == None:
+                if self.param is None:
                     val_c = self.cost_func(p_c)
                 else:
                     val_c = self.cost_func(p_c, self.param)
@@ -149,52 +141,26 @@ class Nelder_Mead:
         while rms > 1e-4:
             val, index, rms, step_name = self.nelder_mead_step()
             print(val, index, rms, step_name)
-        return nm.simplex[index]
+        return self.simplex[index]
 
-def volume(x, p): # not what needs to be changed...
-    #n+1 points max min simplex
-    # spread around an optimum point
-    # random
-
-
-    return (p[0] * x[0] - p[1]) ** 2 + (p[2] * x[1] - p[3]) ** 2
-
+def volume(x, p):
+    return (p[0] * x[0] - p[1]) ** 2 + (p[2] * x[1] - p[3]) ** 2 + (p[4] * x[2] - p[5]) ** 2  # Update for 3D
 
 if __name__ == '__main__':
-    param = [4.0, 8.0, 3.0, 1.0]
-    #param = [0, 0, 0, 0]
-    #param = [3, 4, 6, 8, 10]
-    nm = Nelder_Mead(2, volume, param)
-    v, s = nm.get(0, [1, 1])
-    v, s = nm.get(1, [6, 0])
-    v, s = nm.get(2, [0, 3])
+    param = [4.0, 8.0, 3.0, 1.0, 2.0, 5.0]  # Update parameters for 3D
+    nm = Nelder_Mead(3, volume, param)  # Update dimension to 3
+    v, s = nm.get(0, [1, 1, 1])  # Initial points in 3D
+    v, s = nm.get(1, [6, 0, 0])
+    v, s = nm.get(2, [0, 3, 0])
     x = nm.optimize()
-    #print(x)
 
-    X = np.arange(-5, 5, 0.25)
-    Y = np.arange(-5, 5, 0.25)
-    XX = [[xx for yy in Y] for xx in X]
-    XX = [xx for yy in XX for xx in yy]
-    YY = [[yy for yy in Y] for xx in X]
-    YY = [xx for yy in YY for xx in yy]
-    ZZ = [[volume((xx, yy), param) for xx in Y] for yy in X]
-    ZZ1 = [zz for z in ZZ for zz in z]
-
-    fig = plt.figure(figsize=(8, 4))
-    ax = plt.axes(projection="3d")
-    ax.view_init(10, -60)
-    surface = ax.plot_trisurf(YY, XX, ZZ1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
-    xp, yp, zp = x[0], x[1], -50
-    ax.scatter(xp, yp, zp)
-    ax.contourf(X, Y, ZZ, offset=-50.0)
-    ax.set_zlim([-50, 1000])
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
+    # Visualization (3D scatter plot)
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(s[:, 0], s[:, 1], s[:, 2], c='r', marker='o', label='Simplex vertices')
+    ax.scatter(x[0], x[1], x[2], c='b', marker='x', s=100, label='Optimum')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.legend()
     plt.show()
-
-
-
-
-
-
-

@@ -3,26 +3,31 @@ from numpy import linalg as lin
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+
 class Nelder_Mead:
-    def __init__(self, dim, volume, param=None):
+    def __init__(self, dim, volume, param=None, dolphins=3):
         self.dim = dim
-        self.simplex = np.zeros(dim*(dim + 1))
-        self.simplex = np.reshape(self.simplex, (dim + 1, dim))
+        self.num_dolphins = dolphins
+        #self.simplex = np.zeros(dim * (dim + 1) * dolphins)
+        self.simplex = np.zeros((dolphins, dim + 1, dim)) #(dim * (dim + 1) * dolphins)
+        self.simplex = np.reshape(self.simplex, (dolphins, dim + 1, dim))
         self.param = param
         self.cost_func = volume
-        self.val = np.zeros(dim + 1)
+        self.val = np.zeros((dolphins, dim + 1))
         self.alpha = 1.0
         self.beta = 0.5
         self.gamma = 2.0
         self.delta = 0.5
         print(self.simplex)
 
+
+    # first try
     def get(self, index, entry=None): # entry is an n dimensional array
         if entry is None:
             return self.val[index], self.simplex[index]
         else:
             self.simplex[index] = np.array(entry)
-            if self.param == None:
+            if self.param is None:
                 self.val[index] = self.cost_func(entry)
             else:
                 self.val[index] = self.cost_func(entry, self.param)
@@ -156,20 +161,66 @@ def volume(x, p): # not what needs to be changed...
     # spread around an optimum point
     # random
 
+    return (p[0] * x[0] - p[1]) ** 2 + (p[2] * x[1] - p[3]) ** 2 + (p[4] * x[2] - p[5]) ** 2  # Update for 3D
 
-    return (p[0] * x[0] - p[1]) ** 2 + (p[2] * x[1] - p[3]) ** 2
+#    return (p[0] * x[0] - p[1]) ** 2 + (p[2] * x[1] - p[3]) ** 2
 
 
 if __name__ == '__main__':
-    param = [4.0, 8.0, 3.0, 1.0]
-    #param = [0, 0, 0, 0]
-    #param = [3, 4, 6, 8, 10]
-    nm = Nelder_Mead(2, volume, param)
-    v, s = nm.get(0, [1, 1])
-    v, s = nm.get(1, [6, 0])
-    v, s = nm.get(2, [0, 3])
-    x = nm.optimize()
+    param = [4.0, 8.0, 3.0, 1.0, 2.0, 5.0]
+
+    # 3 dolphins
+    nm3 = Nelder_Mead(3, volume, 3)
+    v, s = nm3.get(0, [1, 1, 1])
+    v, s = nm3.get(1, [6, 0, 1])
+    v, s = nm3.get(2, [0, 3, 1])
+    x3 = nm3.optimize()
     #print(x)
+
+    # 4 dolphins
+    nm4 = Nelder_Mead(3, volume, 4)
+    v, s = nm4.get(0, [1, 1])
+    v, s = nm4.get(1, [6, 0])
+    v, s = nm4.get(2, [0, 3])
+    v, s = nm4.get(3, [2, 5])
+    x4 = nm4.optimize()
+
+    # 6 dolphins
+    nm6 = Nelder_Mead(3, volume, 6)
+    v, s = nm6.get(0, [1, 1])
+    v, s = nm6.get(1, [6, 0])
+    v, s = nm6.get(2, [0, 3])
+    v, s = nm6.get(3, [2, 5])
+    v, s = nm6.get(4, [1, 5])
+    v, s = nm6.get(5, [2, 3])
+    x6 = nm6.optimize()
+
+    # 8 dolphins
+    nm8 = Nelder_Mead(3, volume, 8)
+    v, s = nm8.get(0, [1, 1])
+    v, s = nm8.get(1, [6, 0])
+    v, s = nm8.get(2, [0, 3])
+    v, s = nm8.get(3, [2, 5])
+    v, s = nm8.get(4, [1, 5])
+    v, s = nm8.get(5, [2, 3])
+    v, s = nm8.get(6, [4, 3])
+    v, s = nm8.get(7, [1, 3])
+    x8 = nm8.optimize()
+
+    # 10 dolphins
+    nm10 = Nelder_Mead(3, volume, 10)
+    v, s = nm10.get(0, [1, 1])
+    v, s = nm10.get(1, [6, 0])
+    v, s = nm10.get(2, [0, 3])
+    v, s = nm10.get(3, [2, 5])
+    v, s = nm10.get(4, [1, 5])
+    v, s = nm10.get(5, [2, 3])
+    v, s = nm10.get(6, [4, 3])
+    v, s = nm10.get(7, [1, 3])
+    v, s = nm10.get(8, [2, 6])
+    v, s = nm10.get(9, [0, 5])
+    x10 = nm10.optimize()
+
 
     X = np.arange(-5, 5, 0.25)
     Y = np.arange(-5, 5, 0.25)
@@ -191,10 +242,3 @@ if __name__ == '__main__':
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     plt.show()
-
-
-
-
-
-
-
