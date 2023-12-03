@@ -190,6 +190,7 @@ if __name__ == '__main__':
     ax.set_zlim([-50, 1000])
     ax.set_xlabel('x')
     ax.set_ylabel('y')
+    ax.set_zlabel('volume of simplex')
     plt.show()
 
 
