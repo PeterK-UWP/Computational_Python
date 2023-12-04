@@ -51,17 +51,29 @@ def dV(x, param):
     return np.array([x1, y1])
 
 
+def V_3d(x, param):
+    # (a0*x0 - a1)**2  + (a2*x1 - a3)**3
+    return (param[0]*x[0] - param[1])**2 + (param[2]*x[1] - param[3])**2 + (param[4]*x[2] - param[5]) **2
+
+def dV_3d(x, param):
+    x1 = 2*param[0] * (param[0] * x[0] - param[1])
+    y1 = 2*param[2] * (param[2] * x[1] - param[3])
+    z1 = 2*param[4] * (param[4] * x[2] - param[5])
+    return np.array([x1, y1, z1])
+
 
 
 if __name__ == '__main__':
-    #param = [4.0, 8.0, 3.0, 1.0]
-    param = [1, 1.5, 1.5, 0]
+    """
+    param = [4.0, 8.0, 3.0, 1.0]
+
     x = np.array([1, 1])
     x = gradient_descent(x, V, dV, param)
     print(x)
 
     X = np.arange(-5, 5, 0.25)
     Y = np.arange(-5, 5, 0.25)
+    
     XX = [[xx for yy in Y] for xx in X]
     XX = [xx for yy in XX for xx in yy]
     YY = [[yy for yy in Y] for xx in X]
@@ -75,8 +87,38 @@ if __name__ == '__main__':
     surface = ax.plot_trisurf(YY, XX, ZZ1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     xp, yp, zp = x[0], x[1], -50
     ax.scatter(xp, yp, zp)
-    ax.contourf(X, Y, ZZ, offset=-50.0)
+    #ax.contourf(X, Y, ZZ, offset=-50.0)
     ax.set_zlim([-50, 1000])
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    plt.show()
+    
+    """
+    param_3d = [4.0, 8.0, 3.0, 1.0, 2.0, 5.0]
+
+    x = np.array([1, 1, 1])
+    x = gradient_descent(x, V_3d, dV_3d, param_3d)
+    print(x)
+
+    X = np.arange(-5, 5, 0.25)
+    Y = np.arange(-5, 5, 0.25)
+    Z = np.arange(-5, 5, 0.25)
+
+    XX = [[xx for yy in Y] for xx in X]
+    XX = [xx for yy in XX for xx in yy]
+    YY = [[yy for yy in Y] for xx in X]
+    YY = [xx for yy in YY for xx in yy]
+    ZZ = [[V((xx, yy), param_3d) for xx in Y] for yy in X]
+    ZZ1 = [zz for z in ZZ for zz in z]
+
+    fig = plt.figure(figsize=(8, 4))
+    ax = plt.axes(projection="3d")
+    ax.view_init(10, -60)
+    surface = ax.plot_trisurf(YY, XX, ZZ1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    xp, yp, zp = x[0], x[1], -50
+    ax.scatter(xp, yp, zp)
+    #ax.contourf(X, Y, ZZ, offset=-50.0)
+    #ax.set_zlim([-50, 1000])
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     plt.show()

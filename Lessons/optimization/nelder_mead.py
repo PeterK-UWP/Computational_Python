@@ -15,7 +15,7 @@ class Nelder_Mead:
         self.beta = 0.5
         self.gamma = 2.0
         self.delta = 0.5
-        print(self.simplex)
+        #print(self.simplex)
 
     def get(self, index, entry=None): # entry is an n dimensional array
         if entry is None:
@@ -50,7 +50,7 @@ class Nelder_Mead:
         for i in range(max + 1, self.dim + 1):
             p_bar += self.simplex[i]
 
-        p_bar = p_bar/self.dim
+        p_bar = p_bar/self.dim # normalized?
         # print(f'p_bar {p_bar}') # two terms based on dim.
         # self.dim = 3 so our p_bar should be three terms
         return p_bar #, max
@@ -185,6 +185,7 @@ if __name__ == '__main__':
     ax.view_init(10, -60)
     surface = ax.plot_trisurf(YY, XX, ZZ1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     xp, yp, zp = x[0], x[1], -50
+    print(xp, yp)
     ax.scatter(xp, yp, zp)
     ax.contourf(X, Y, ZZ, offset=-50.0)
     ax.set_zlim([-50, 1000])
