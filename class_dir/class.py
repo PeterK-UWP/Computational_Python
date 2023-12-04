@@ -166,7 +166,7 @@ def normalize_to_sphere(x, num_dolphins, radius=1.0):
     return normalized_x.flatten()
 
 if __name__ == '__main__':
-    np.random.seed(42)  # Set seed for reproducibility
+    np.random.seed()  # Set seed for reproducibility
 
     group_sizes = [3, 4, 6, 8, 10]
 
